@@ -50,7 +50,7 @@ const DoctorProfile = () => {
         <div>
             <div className='flex flex-col gap-4 m-5'>
                 <div>
-                    <img className='bg-primary/80 w-full sm:max-w-64 rounded-lg' src={profileData.image} alt="" />
+                    <img className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2]/80 w-full sm:max-w-64 rounded-lg' src={profileData.image} alt="" />
                 </div>
 
                 <div className='flex-1 border border-stone-100 rounded-lg p-8 py-7 bg-white'>
@@ -95,8 +95,8 @@ const DoctorProfile = () => {
 
                     {
                         isEdit
-                            ? <button onClick={updateProfile} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all'>Save</button>
-                            : <button onClick={() => setIsEdit(prev => !prev)} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all'>Edit</button>
+                            ? <button onClick={updateProfile} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-gradient-to-r from-[#0D47A1] to-[#1976D2] hover:text-white transition-all'>Save</button>
+                            : <button onClick={() => setIsEdit(prev => !prev)} className='px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-gradient-to-r from-[#0D47A1] to-[#1976D2] hover:text-white transition-all'>Edit</button>
                     }
 
                 </div>

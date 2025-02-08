@@ -29,6 +29,7 @@
 // app.listen(port, () => console.log(`Server started on PORT:${port}`))
 
 import express from "express";
+import assert from "assert";
 import cors from "cors";
 import session from "express-session";
 import crypto from "crypto";
@@ -40,11 +41,14 @@ import userRouter from "./routes/userRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import adminRouter from "./routes/adminRoute.js";
 
-// Import credentials
-import credentials from "./creds.json" assert { type: "json" };
+// Use CommonJS require instead of import
+import fs from 'fs/promises';
+
+const credentials = JSON.parse(await fs.readFile(new URL('./creds.json', import.meta.url), 'utf-8'));
+
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174"];
 
 // App config
 const app = express();

@@ -14,7 +14,7 @@
 
 @media (max-width:740px) {
     .active  p{
-       @apply text-white bg-primary
+       @apply text-white bg-gradient-to-r from-[#0D47A1] to-[#1976D2]
     }
 }
 

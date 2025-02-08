@@ -72,6 +72,18 @@ const Navbar = () => {
         >
           Health
         </NavLink>
+        
+        <NavLink
+          to="/my-health-search"
+          className={({ isActive }) =>
+            `relative px-4 py-2 text-lg font-semibold transition-all duration-300 
+            ${isActive ? "text-blue-600 after:w-full" : "text-black hover:text-blue-600"} 
+            after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-600 
+            after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100`
+          }
+        >
+          MediView
+        </NavLink>
 
         <NavLink
           to="/contact"
@@ -120,7 +132,7 @@ const Navbar = () => {
         ) : (
           <button
             onClick={() => navigate("/login")}
-            className="bg-primary text-white px-8 py-3 rounded-full font-light hidden md:block"
+            className="bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white px-8 py-3 rounded-full font-light hidden md:block"
           >
             Create Account
           </button>
@@ -191,6 +203,18 @@ const Navbar = () => {
               }
             >
               Health
+            </NavLink>
+            <NavLink
+              onClick={() => setShowMenu(false)}
+              to="/my-health-search"
+              className={({ isActive }) =>
+                `relative px-4 py-2 text-lg font-semibold transition-all duration-300 
+                ${isActive ? "text-blue-600 after:w-full" : "text-black hover:text-blue-600"} 
+                after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-blue-600 
+                after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100`
+              }
+            >
+              MediView
             </NavLink>
             <NavLink
               onClick={() => setShowMenu(false)}
