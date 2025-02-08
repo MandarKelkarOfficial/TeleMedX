@@ -136,7 +136,7 @@ const Appointment = () => {
             {/* ---------- Doctor Details ----------- */}
             <div className='flex flex-col sm:flex-row gap-4'>
                 <div>
-                    <img className='bg-primary w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
+                    <img className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2] w-full sm:max-w-72 rounded-lg' src={docInfo.image} alt="" />
                 </div>
 
                 <div className='flex-1 border border-[#ADADAD] rounded-lg p-8 py-7 bg-white mx-2 sm:mx-0 mt-[-80px] sm:mt-0'>
@@ -164,7 +164,7 @@ const Appointment = () => {
                 <p >Booking slots</p>
                 <div className='flex gap-3 items-center w-full overflow-x-scroll mt-4'>
                     {docSlots.length && docSlots.map((item, index) => (
-                        <div onClick={() => setSlotIndex(index)} key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? 'bg-primary text-white' : 'border border-[#DDDDDD]'}`}>
+                        <div onClick={() => setSlotIndex(index)} key={index} className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index ? 'bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white' : 'border border-[#DDDDDD]'}`}>
                             <p>{item[0] && daysOfWeek[item[0].datetime.getDay()]}</p>
                             <p>{item[0] && item[0].datetime.getDate()}</p>
                         </div>
@@ -173,11 +173,11 @@ const Appointment = () => {
 
                 <div className='flex flex-wrap gap-3 items-center w-full mt-4'>
                     {docSlots.length && docSlots[slotIndex].map((item, index) => (
-                        <p onClick={() => setSlotTime(item.time)} key={index} className={`text-sm font-light  flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-primary text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
+                        <p onClick={() => setSlotTime(item.time)} key={index} className={`text-sm font-light  flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime ? 'bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white' : 'text-[#949494] border border-[#B4B4B4]'}`}>{item.time.toLowerCase()}</p>
                     ))}
                 </div>
 
-                <button onClick={bookAppointment} className='bg-primary text-white text-sm font-light px-20 py-3 rounded-full my-6'>Book an appointment</button>
+                <button onClick={bookAppointment} className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white text-sm font-light px-20 py-3 rounded-full my-6'>Book an appointment</button>
             </div>
 
             {/* Listing Releated Doctors */}

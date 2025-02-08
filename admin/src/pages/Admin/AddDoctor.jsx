@@ -163,7 +163,7 @@ const AddDoctor = () => {
                     <textarea onChange={e => setAbout(e.target.value)} value={about} className='w-full px-4 pt-2 border rounded' rows={5} placeholder='write about doctor'></textarea>
                 </div>
 
-                <button type='submit' className='bg-primary px-10 py-3 mt-4 text-white rounded-full'>Add doctor</button>
+                <button type='submit' className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2] px-10 py-3 mt-4 text-white rounded-full'>Add doctor</button>
 
             </div>
 

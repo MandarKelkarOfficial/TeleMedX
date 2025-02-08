@@ -44,7 +44,7 @@ import adminRouter from "./routes/adminRoute.js";
 import credentials from "./creds.json" assert { type: "json" };
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174"];
 
 // App config
 const app = express();
