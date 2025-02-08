@@ -1,0 +1,21 @@
+{
+  "web": {
+    "client_id": "688626160432-r61dk2bh3viechh8ikaa8605ush59gof.apps.googleusercontent.com",
+    "project_id": "gen-lang-client-0149974157",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_secret": "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",
+    "redirect_uris": [
+      "http://localhost:3000",
+      "http://localhost:3000/patient",
+      "http://localhost:4000/auth/google/callback",
+      "http://localhost:5173/my-health"
+    ],
+    "javascript_origins": [
+      "http://localhost:3000",
+      "http://localhost:5000",
+      "http://localhost:4000"
+    ]
+  }
+}
