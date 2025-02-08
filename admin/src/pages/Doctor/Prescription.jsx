@@ -5,30 +5,26 @@ import jsPDF from "jspdf";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { DoctorContext } from "../../context/DoctorContext";
 import { useNavigate } from "react-router-dom";
+// import medicinesList from "./MedicineList";
+import medicinesList from "./MedicineList";
+
+// const medilist = require('../../Medicine_list.json');
+// import 
 
 // import logo from "../../assets/assets";
 
 // Medicine list with only the basic parameters.
-const medicinesList = [
-  {
-    value: "Paracetamol",
-    label: "Paracetamol",
-    dose: "500mg",
-    timing: "Morning",
-  },
-  {
-    value: "Ibuprofen",
-    label: "Ibuprofen",
-    dose: "200mg",
-    timing: "Evening",
-  },
-  {
-    value: "Amoxicillin",
-    label: "Amoxicillin",
-    dose: "250mg",
-    timing: "After meals",
-  },
+const MedicinesList = medicinesList;
+
+const timingOptions = [
+  { value: "Morning", label: "Morning" },
+  { value: "Evening", label: "Evening" },
+  { value: "After Lunch", label: "After Lunch" },
+  { value: "Before Lunch", label: "Before Lunch" },
+  { value: "After Dinner", label: "After Dinner" },
+  { value: "Before Dinner", label: "Before Dinner" },
 ];
+
 
 // Options for the frequency dropdown.
 const frequencyOptions = [
@@ -38,6 +34,8 @@ const frequencyOptions = [
   { value: "Every 6 hours", label: "Every 6 hours" },
   { value: "Every 8 hours", label: "Every 8 hours" },
 ];
+
+
 
 const PrescriptionGenerator = () => {
   const navigate = useNavigate();
@@ -212,7 +210,7 @@ const PrescriptionGenerator = () => {
               <Form.Label>Select Medicines</Form.Label>
               <Select
                 isMulti
-                options={medicinesList}
+                options={MedicinesList}
                 onChange={handleMedicineChange}
                 placeholder="Select medicine(s)..."
               />
@@ -246,16 +244,19 @@ const PrescriptionGenerator = () => {
                 <Col md={3}>
                   <Form.Group>
                     <Form.Label>Timing</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={medicine.timing}
-                      onChange={(e) =>
+                    <Select
+                      options={timingOptions}
+                      value={timingOptions.find(
+                        (option) => option.value === medicine.timing
+                      )}
+                      onChange={(selectedOption) =>
                         handleMedicineFieldChange(
                           index,
                           "timing",
-                          e.target.value
+                          selectedOption.value
                         )
                       }
+                      placeholder="Select timing..."
                     />
                   </Form.Group>
                 </Col>
