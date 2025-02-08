@@ -13,7 +13,8 @@ import Footer from './components/Footer'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify'
-
+// import HeartRate from './pages/Health'
+import Health from './pages/Health'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[10%]'>
@@ -30,6 +31,7 @@ const App = () => {
         <Route path='/my-appointments' element={<MyAppointments />} />
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/verify' element={<Verify />} />
+        <Route path='/my-health' element={<Health/>} />
       </Routes>
       <Footer />
     </div>
