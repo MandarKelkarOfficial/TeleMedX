@@ -5,30 +5,16 @@ import jsPDF from "jspdf";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { DoctorContext } from "../../context/DoctorContext";
 import { useNavigate } from "react-router-dom";
+// import medicinesList from "./MedicineList";
+import medicinesList from "./MedicineList";
+
+// const medilist = require('../../Medicine_list.json');
+// import 
 
 // import logo from "../../assets/assets";
 
 // Medicine list with only the basic parameters.
-const medicinesList = [
-  {
-    value: "Paracetamol",
-    label: "Paracetamol",
-    dose: "500mg",
-    timing: "Morning",
-  },
-  {
-    value: "Ibuprofen",
-    label: "Ibuprofen",
-    dose: "200mg",
-    timing: "Evening",
-  },
-  {
-    value: "Amoxicillin",
-    label: "Amoxicillin",
-    dose: "250mg",
-    timing: "After meals",
-  },
-];
+const MedicinesList = medicinesList;
 
 // Options for the frequency dropdown.
 const frequencyOptions = [
@@ -212,7 +198,7 @@ const PrescriptionGenerator = () => {
               <Form.Label>Select Medicines</Form.Label>
               <Select
                 isMulti
-                options={medicinesList}
+                options={MedicinesList}
                 onChange={handleMedicineChange}
                 placeholder="Select medicine(s)..."
               />
