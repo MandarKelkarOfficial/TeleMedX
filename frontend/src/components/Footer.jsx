@@ -3,8 +3,8 @@ import { FaPhoneAlt, FaEnvelope } from "react-icons/fa"; // Importing icons
 
 const Footer = () => {
   return (
-    <div className="w-screen bg-gray-100 py-10 mt-40 rounded-lg shadow-md">
-      <div className="w-full max-w-7xl mx-auto flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 text-sm px-6 md:px-12">
+    <div className="w-full bg-gray-100 py-10 mt-40 shadow-md">
+      <div className="max-w-7xl mx-auto flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 text-sm px-6 md:px-12">
 
         {/* Brand Info */}
         <div>
@@ -41,7 +41,7 @@ const Footer = () => {
       </div>
 
       {/* Footer Bottom */}
-      <div className="w-screen border-t border-gray-300 mt-10 pt-5 text-center text-gray-500 text-sm">
+      <div className="w-full border-t border-gray-300 mt-10 pt-5 text-center text-gray-500 text-sm">
         © {new Date().getFullYear()} TeleMedX. All rights reserved.
       </div>
     </div>
