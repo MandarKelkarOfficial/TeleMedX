@@ -40,6 +40,7 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import adminRouter from "./routes/adminRoute.js";
+import agoraRouter from "./routes/agora.js";
 
 // Use CommonJS require instead of import
 import fs from 'fs/promises';
@@ -48,7 +49,7 @@ const credentials = JSON.parse(await fs.readFile(new URL('./creds.json', import.
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://192.168.52.64:5173"];
 
 // App config
 const app = express();
@@ -96,7 +97,7 @@ const SCOPES = [
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/doctor", doctorRouter);
-
+app.use("/api/agora", agoraRouter)
 app.get("/", (req, res) => {
   res.send("API Working");
 });

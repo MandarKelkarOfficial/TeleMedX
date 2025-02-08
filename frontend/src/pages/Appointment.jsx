@@ -238,6 +238,8 @@ const Appointment = () => {
         >
           Book an appointment
         </button>
+
+        {/* <button onClick={() => navigate(`/video-call/${docId}`)} className='bg-blue-500 text-white px-4 py-2 rounded mt-4'>Start Video Consultation</button> */}
       </div>
 
       {/* Listing Releated Doctors */}
