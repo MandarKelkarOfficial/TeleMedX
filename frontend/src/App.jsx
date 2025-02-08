@@ -15,6 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Verify from './pages/Verify'
 // import HeartRate from './pages/Health'
 import Health from './pages/Health'
+import MedicineSearch from './pages/MedicalSearch'
 const App = () => {
   return (
     <div className='mx-4 sm:mx-[10%]'>
@@ -32,6 +33,7 @@ const App = () => {
         <Route path='/my-profile' element={<MyProfile />} />
         <Route path='/verify' element={<Verify />} />
         <Route path='/my-health' element={<Health/>} />
+        <Route path='/my-health-search' element={<MedicineSearch/>} />
       </Routes>
       <Footer />
     </div>
