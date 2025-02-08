@@ -1,46 +1,51 @@
+import { useState, useContext } from "react";
+import { Button, Form, Row, Col, Card } from "react-bootstrap";
+import Select from "react-select";
+import jsPDF from "jspdf";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { DoctorContext } from "../../context/DoctorContext";
+import { useNavigate } from "react-router-dom";
 
-
-import  { useState } from 'react';
-import { Button, Form, Row, Col, Card } from 'react-bootstrap';
-import Select from 'react-select';
-import jsPDF from 'jspdf';
-import 'bootstrap/dist/css/bootstrap.min.css';
 // import logo from "../../assets/assets";
 
 // Medicine list with only the basic parameters.
 const medicinesList = [
-  { 
-    value: 'Paracetamol', 
-    label: 'Paracetamol', 
-    dose: '500mg', 
-    timing: 'Morning'
+  {
+    value: "Paracetamol",
+    label: "Paracetamol",
+    dose: "500mg",
+    timing: "Morning",
   },
-  { 
-    value: 'Ibuprofen', 
-    label: 'Ibuprofen', 
-    dose: '200mg', 
-    timing: 'Evening'
+  {
+    value: "Ibuprofen",
+    label: "Ibuprofen",
+    dose: "200mg",
+    timing: "Evening",
   },
-  { 
-    value: 'Amoxicillin', 
-    label: 'Amoxicillin', 
-    dose: '250mg', 
-    timing: 'After meals'
+  {
+    value: "Amoxicillin",
+    label: "Amoxicillin",
+    dose: "250mg",
+    timing: "After meals",
   },
 ];
 
 // Options for the frequency dropdown.
 const frequencyOptions = [
-  { value: 'Once a day', label: 'Once a day' },
-  { value: 'Twice a day', label: 'Twice a day' },
-  { value: 'Thrice a day', label: 'Thrice a day' },
-  { value: 'Every 6 hours', label: 'Every 6 hours' },
-  { value: 'Every 8 hours', label: 'Every 8 hours' },
+  { value: "Once a day", label: "Once a day" },
+  { value: "Twice a day", label: "Twice a day" },
+  { value: "Thrice a day", label: "Thrice a day" },
+  { value: "Every 6 hours", label: "Every 6 hours" },
+  { value: "Every 8 hours", label: "Every 8 hours" },
 ];
 
 const PrescriptionGenerator = () => {
-  const [patientName, setPatientName] = useState('');
-  const [validityDate, setValidityDate] = useState('');
+  const navigate = useNavigate();
+
+  const { dToken, appointments } = useContext(DoctorContext);
+
+  const [patientName, setPatientName] = useState("");
+  const [validityDate, setValidityDate] = useState("");
   // medicineDetails holds the list of selected medicines with extra fields.
   const [medicineDetails, setMedicineDetails] = useState([]);
 
@@ -49,13 +54,15 @@ const PrescriptionGenerator = () => {
     let newDetails = [];
     if (selectedOptions) {
       newDetails = selectedOptions.map((medicine) => {
-        const existing = medicineDetails.find(item => item.value === medicine.value);
+        const existing = medicineDetails.find(
+          (item) => item.value === medicine.value
+        );
         return {
           ...medicine,
-          dose: existing ? existing.dose : medicine.dose || '',
-          timing: existing ? existing.timing : medicine.timing || '',
-          frequency: existing ? existing.frequency : '', // Default empty
-          duration: existing ? existing.duration : '',   // Default empty
+          dose: existing ? existing.dose : medicine.dose || "",
+          timing: existing ? existing.timing : medicine.timing || "",
+          frequency: existing ? existing.frequency : "", // Default empty
+          duration: existing ? existing.duration : "", // Default empty
         };
       });
     }
@@ -84,30 +91,30 @@ const PrescriptionGenerator = () => {
     // if (logo.p_logo) {
     //   doc.addImage(logo.p_logo, 'SVG', 10, 10, logoWidth, logoHeight);
     // }
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setFontSize(16);
-    doc.text('Maddys Hospital', 50, 15);
-    doc.setFont('helvetica', 'normal');
+    doc.text("Maddys Hospital", 50, 15);
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(12);
-    doc.text('Dr. Maddy K', 50, 25);
-    doc.text('Contact: +1234567890', 50, 30);
-    doc.text('Email: Maddy@example.com', 50, 35);
-    doc.text('Clinic Contact: +0987654321', 50, 40);
+    doc.text("Dr. Maddy K", 50, 25);
+    doc.text("Contact: +1234567890", 50, 30);
+    doc.text("Email: Maddy@example.com", 50, 35);
+    doc.text("Clinic Contact: +0987654321", 50, 40);
 
     // --- Patient Information ---
     doc.setLineWidth(0.5);
     doc.line(10, 45, doc.internal.pageSize.getWidth() - 10, 45);
     let yOffset = 55;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Patient Information', 10, yOffset);
+    doc.setFont("helvetica", "bold");
+    doc.text("Patient Information", 10, yOffset);
     yOffset += 5;
-    doc.setFont('helvetica', 'normal');
-    doc.text(`Name: ${patientName || 'N/A'}`, 10, yOffset += 5);
-    doc.text(`Phone: ${patientPhone}`, 10, yOffset += 5);
-    doc.text(`ID: ${patientID}`, 10, yOffset += 5);
-    doc.text(`Visit Date: ${visitDate}`, 10, yOffset += 5);
-    doc.text(`#Visit: ${visitNumber}`, 10, yOffset += 5);
-    doc.text(`Validity: ${validityDate || 'N/A'}`, 10, yOffset += 5);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Name: ${patientName || "N/A"}`, 10, (yOffset += 5));
+    doc.text(`Phone: ${patientPhone}`, 10, (yOffset += 5));
+    doc.text(`ID: ${patientID}`, 10, (yOffset += 5));
+    doc.text(`Visit Date: ${visitDate}`, 10, (yOffset += 5));
+    doc.text(`#Visit: ${visitNumber}`, 10, (yOffset += 5));
+    doc.text(`Validity: ${validityDate || "N/A"}`, 10, (yOffset += 5));
 
     // --- Separator ---
     yOffset += 5;
@@ -115,27 +122,27 @@ const PrescriptionGenerator = () => {
     yOffset += 10;
 
     // --- Medicines Section ---
-    doc.setFont('helvetica', 'bold');
-    doc.text('Medicines Prescribed', 10, yOffset);
+    doc.setFont("helvetica", "bold");
+    doc.text("Medicines Prescribed", 10, yOffset);
     yOffset += 10;
     // Table header for the medicines list.
     doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Medicine', 10, yOffset);
-    doc.text('Dose', 50, yOffset);
-    doc.text('Timing', 80, yOffset);
-    doc.text('Frequency', 110, yOffset);
-    doc.text('Duration', 150, yOffset);
+    doc.setFont("helvetica", "bold");
+    doc.text("Medicine", 10, yOffset);
+    doc.text("Dose", 50, yOffset);
+    doc.text("Timing", 80, yOffset);
+    doc.text("Frequency", 110, yOffset);
+    doc.text("Duration", 150, yOffset);
     yOffset += 5;
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "normal");
 
     if (medicineDetails.length > 0) {
       medicineDetails.forEach((medicine) => {
-        doc.text(medicine.label || 'N/A', 10, yOffset);
-        doc.text(medicine.dose || 'N/A', 50, yOffset);
-        doc.text(medicine.timing || 'N/A', 80, yOffset);
-        doc.text(medicine.frequency || 'N/A', 110, yOffset);
-        doc.text(medicine.duration || 'N/A', 150, yOffset);
+        doc.text(medicine.label || "N/A", 10, yOffset);
+        doc.text(medicine.dose || "N/A", 50, yOffset);
+        doc.text(medicine.timing || "N/A", 80, yOffset);
+        doc.text(medicine.frequency || "N/A", 110, yOffset);
+        doc.text(medicine.duration || "N/A", 150, yOffset);
         yOffset += 6;
         if (yOffset > 270) {
           doc.addPage();
@@ -143,30 +150,30 @@ const PrescriptionGenerator = () => {
         }
       });
     } else {
-      doc.text('No medicines prescribed.', 10, yOffset);
+      doc.text("No medicines prescribed.", 10, yOffset);
       yOffset += 10;
     }
 
     // --- Advice Section ---
     yOffset += 10;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Advice:', 10, yOffset);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "bold");
+    doc.text("Advice:", 10, yOffset);
+    doc.setFont("helvetica", "normal");
     yOffset += 5;
     doc.text(doctorAdvice, 10, yOffset);
 
     // --- Footer Section ---
     yOffset += 10;
-    doc.setFont('helvetica', 'bold');
-    doc.text('Follow-Up Details', 10, yOffset);
-    doc.setFont('helvetica', 'normal');
+    doc.setFont("helvetica", "bold");
+    doc.text("Follow-Up Details", 10, yOffset);
+    doc.setFont("helvetica", "normal");
     yOffset += 5;
     doc.text(`Next Visit: ${nextVisit}`, 10, yOffset);
     yOffset += 10;
-    doc.setFont('helvetica', 'italic');
-    doc.text('Powered by TelemedX', 10, yOffset);
+    doc.setFont("helvetica", "italic");
+    doc.text("Powered by TelemedX", 10, yOffset);
 
-    doc.save('prescription.pdf');
+    doc.save("prescription.pdf");
   };
 
   return (
@@ -231,7 +238,7 @@ const PrescriptionGenerator = () => {
                       type="text"
                       value={medicine.dose}
                       onChange={(e) =>
-                        handleMedicineFieldChange(index, 'dose', e.target.value)
+                        handleMedicineFieldChange(index, "dose", e.target.value)
                       }
                     />
                   </Form.Group>
@@ -243,7 +250,11 @@ const PrescriptionGenerator = () => {
                       type="text"
                       value={medicine.timing}
                       onChange={(e) =>
-                        handleMedicineFieldChange(index, 'timing', e.target.value)
+                        handleMedicineFieldChange(
+                          index,
+                          "timing",
+                          e.target.value
+                        )
                       }
                     />
                   </Form.Group>
@@ -255,7 +266,11 @@ const PrescriptionGenerator = () => {
                       as="select"
                       value={medicine.frequency}
                       onChange={(e) =>
-                        handleMedicineFieldChange(index, 'frequency', e.target.value)
+                        handleMedicineFieldChange(
+                          index,
+                          "frequency",
+                          e.target.value
+                        )
                       }
                     >
                       <option value="">Select frequency</option>
@@ -277,7 +292,11 @@ const PrescriptionGenerator = () => {
                       placeholder="e.g., 5 days"
                       value={medicine.duration}
                       onChange={(e) =>
-                        handleMedicineFieldChange(index, 'duration', e.target.value)
+                        handleMedicineFieldChange(
+                          index,
+                          "duration",
+                          e.target.value
+                        )
                       }
                     />
                   </Form.Group>
@@ -286,10 +305,18 @@ const PrescriptionGenerator = () => {
             </Card.Body>
           </Card>
         ))}
-
-        <Button variant="primary" onClick={generatePDF}>
-          Generate Prescription
-        </Button>
+        <div className="flex flex-col items-center w-full gap-3">
+          <Button variant="primary" className="w-full" onClick={generatePDF}>
+            Generate Prescription
+          </Button>
+          <Button
+            variant="secondary"
+            className="w-full"
+            onClick={() => navigate("/doctor-appointments")}
+          >
+            Go Back
+          </Button>
+        </div>
       </Form>
     </div>
   );
