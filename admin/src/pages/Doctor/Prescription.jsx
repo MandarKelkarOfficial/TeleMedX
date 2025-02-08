@@ -16,6 +16,16 @@ import medicinesList from "./MedicineList";
 // Medicine list with only the basic parameters.
 const MedicinesList = medicinesList;
 
+const timingOptions = [
+  { value: "Morning", label: "Morning" },
+  { value: "Evening", label: "Evening" },
+  { value: "After Lunch", label: "After Lunch" },
+  { value: "Before Lunch", label: "Before Lunch" },
+  { value: "After Dinner", label: "After Dinner" },
+  { value: "Before Dinner", label: "Before Dinner" },
+];
+
+
 // Options for the frequency dropdown.
 const frequencyOptions = [
   { value: "Once a day", label: "Once a day" },
@@ -24,6 +34,8 @@ const frequencyOptions = [
   { value: "Every 6 hours", label: "Every 6 hours" },
   { value: "Every 8 hours", label: "Every 8 hours" },
 ];
+
+
 
 const PrescriptionGenerator = () => {
   const navigate = useNavigate();
@@ -232,16 +244,19 @@ const PrescriptionGenerator = () => {
                 <Col md={3}>
                   <Form.Group>
                     <Form.Label>Timing</Form.Label>
-                    <Form.Control
-                      type="text"
-                      value={medicine.timing}
-                      onChange={(e) =>
+                    <Select
+                      options={timingOptions}
+                      value={timingOptions.find(
+                        (option) => option.value === medicine.timing
+                      )}
+                      onChange={(selectedOption) =>
                         handleMedicineFieldChange(
                           index,
                           "timing",
-                          e.target.value
+                          selectedOption.value
                         )
                       }
+                      placeholder="Select timing..."
                     />
                   </Form.Group>
                 </Col>
