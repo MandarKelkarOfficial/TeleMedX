@@ -12,11 +12,12 @@ const AuthButton = () => {
   };
 
   return (
-    <div className="text-center">
+    <div className="flex justify-center">
       <button
         onClick={handleAuthClick}
-        className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500"
-       
+        className="px-6 py-2 text-white font-semibold bg-gradient-to-r from-green-500 to-green-700 
+                   rounded-lg shadow-md hover:shadow-lg transition-all duration-300 
+                   hover:from-green-600 hover:to-green-800 active:scale-95"
       >
         Sign in with Google
       </button>

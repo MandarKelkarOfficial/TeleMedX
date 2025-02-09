@@ -5,10 +5,11 @@ import userModel from "../models/userModel.js";
 import doctorModel from "../models/doctorModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import { v2 as cloudinary } from 'cloudinary'
-import stripe from "stripe";
+// import stripe from "stripe";
 import razorpay from 'razorpay';
 
-// Gateway Initialize
+
+//Gateway Initialize
 // const stripeInstance = new stripe(process.env.STRIPE_SECRET_KEY)
 // const razorpayInstance = new razorpay({
 //     key_id: process.env.RAZORPAY_KEY_ID,
@@ -131,36 +132,92 @@ const updateProfile = async (req, res) => {
 }
 
 // API to book appointment 
+// const bookAppointment = async (req, res) => {
+
+//     try {
+
+//         const { userId, docId, slotDate, slotTime } = req.body
+//         const docData = await doctorModel.findById(docId).select("-password")
+
+//         if (!docData.available) {
+//             return res.json({ success: false, message: 'Doctor Not Available' })
+//         }
+
+//         let slots_booked = docData.slots_booked
+
+//         // checking for slot availablity 
+//         if (slots_booked[slotDate]) {
+//             if (slots_booked[slotDate].includes(slotTime)) {
+//                 return res.json({ success: false, message: 'Slot Not Available' })
+//             }
+//             else {
+//                 slots_booked[slotDate].push(slotTime)
+//             }
+//         } else {
+//             slots_booked[slotDate] = []
+//             slots_booked[slotDate].push(slotTime)
+//         }
+
+//         const userData = await userModel.findById(userId).select("-password")
+
+//         delete docData.slots_booked
+
+//         const appointmentData = {
+//             userId,
+//             docId,
+//             userData,
+//             docData,
+//             amount: docData.fees,
+//             slotTime,
+//             slotDate,
+//             date: Date.now()
+//         }
+
+//         const newAppointment = new appointmentModel(appointmentData)
+//         await newAppointment.save()
+
+//         // save new slots data in docData
+//         await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+
+//         res.json({ success: true, message: 'Appointment Booked' })
+
+//     } catch (error) {
+//         console.log(error)
+//         res.json({ success: false, message: error.message })
+//     }
+
+// }
+
+
 const bookAppointment = async (req, res) => {
-
     try {
+        const { userId, docId, slotDate, slotTime } = req.body;
 
-        const { userId, docId, slotDate, slotTime } = req.body
-        const docData = await doctorModel.findById(docId).select("-password")
-
+        // Find the doctor and user data
+        const docData = await doctorModel.findById(docId).select("-password");
         if (!docData.available) {
-            return res.json({ success: false, message: 'Doctor Not Available' })
+            return res.json({ success: false, message: 'Doctor Not Available' });
         }
 
-        let slots_booked = docData.slots_booked
+        // Get the booked slots
+        let slots_booked = docData.slots_booked;
 
-        // checking for slot availablity 
+        // Check if the slot has already been booked twice
         if (slots_booked[slotDate]) {
-            if (slots_booked[slotDate].includes(slotTime)) {
-                return res.json({ success: false, message: 'Slot Not Available' })
-            }
-            else {
-                slots_booked[slotDate].push(slotTime)
+            const bookedCount = slots_booked[slotDate].filter(time => time === slotTime).length;
+            if (bookedCount >= 2) {
+                return res.json({ success: false, message: 'Slot already booked twice' });
+            } else {
+                slots_booked[slotDate].push(slotTime);
             }
         } else {
-            slots_booked[slotDate] = []
-            slots_booked[slotDate].push(slotTime)
+            slots_booked[slotDate] = [slotTime];
         }
 
-        const userData = await userModel.findById(userId).select("-password")
+        // Find user data
+        const userData = await userModel.findById(userId).select("-password");
 
-        delete docData.slots_booked
-
+        // Create the appointment data
         const appointmentData = {
             userId,
             docId,
@@ -170,22 +227,23 @@ const bookAppointment = async (req, res) => {
             slotTime,
             slotDate,
             date: Date.now()
-        }
+        };
 
-        const newAppointment = new appointmentModel(appointmentData)
-        await newAppointment.save()
+        // Create and save the appointment
+        const newAppointment = new appointmentModel(appointmentData);
+        await newAppointment.save();
 
-        // save new slots data in docData
-        await doctorModel.findByIdAndUpdate(docId, { slots_booked })
+        // Update the doctor's available slots
+        await doctorModel.findByIdAndUpdate(docId, { slots_booked });
 
-        res.json({ success: true, message: 'Appointment Booked' })
-
+        res.json({ success: true, message: 'Appointment Booked' });
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
+};
 
-}
+
 
 // API to cancel appointment
 const cancelAppointment = async (req, res) => {
@@ -252,6 +310,7 @@ const paymentRazorpay = async (req, res) => {
             currency: process.env.CURRENCY,
             receipt: appointmentId,
         }
+        console.log(appointmentId)
 
         // creation of an order
         const order = await razorpayInstance.orders.create(options)
@@ -284,64 +343,64 @@ const verifyRazorpay = async (req, res) => {
 }
 
 // API to make payment of appointment using Stripe
-const paymentStripe = async (req, res) => {
-    try {
+// const paymentStripe = async (req, res) => {
+//     try {
 
-        const { appointmentId } = req.body
-        const { origin } = req.headers
+//         const { appointmentId } = req.body
+//         const { origin } = req.headers
 
-        const appointmentData = await appointmentModel.findById(appointmentId)
+//         const appointmentData = await appointmentModel.findById(appointmentId)
 
-        if (!appointmentData || appointmentData.cancelled) {
-            return res.json({ success: false, message: 'Appointment Cancelled or not found' })
-        }
+//         if (!appointmentData || appointmentData.cancelled) {
+//             return res.json({ success: false, message: 'Appointment Cancelled or not found' })
+//         }
 
-        const currency = process.env.CURRENCY.toLocaleLowerCase()
+//         const currency = process.env.CURRENCY.toLocaleLowerCase()
 
-        const line_items = [{
-            price_data: {
-                currency,
-                product_data: {
-                    name: "Appointment Fees"
-                },
-                unit_amount: appointmentData.amount * 100
-            },
-            quantity: 1
-        }]
+//         const line_items = [{
+//             price_data: {
+//                 currency,
+//                 product_data: {
+//                     name: "Appointment Fees"
+//                 },
+//                 unit_amount: appointmentData.amount * 100
+//             },
+//             quantity: 1
+//         }]
 
-        const session = await stripeInstance.checkout.sessions.create({
-            success_url: `${origin}/verify?success=true&appointmentId=${appointmentData._id}`,
-            cancel_url: `${origin}/verify?success=false&appointmentId=${appointmentData._id}`,
-            line_items: line_items,
-            mode: 'payment',
-        })
+//         const session = await stripeInstance.checkout.sessions.create({
+//             success_url: `${origin}/verify?success=true&appointmentId=${appointmentData._id}`,
+//             cancel_url: `${origin}/verify?success=false&appointmentId=${appointmentData._id}`,
+//             line_items: line_items,
+//             mode: 'payment',
+//         })
 
-        res.json({ success: true, session_url: session.url });
+//         res.json({ success: true, session_url: session.url });
 
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-}
+//     } catch (error) {
+//         console.log(error)
+//         res.json({ success: false, message: error.message })
+//     }
+// }
 
-const verifyStripe = async (req, res) => {
-    try {
+// const verifyStripe = async (req, res) => {
+//     try {
 
-        const { appointmentId, success } = req.body
+//         const { appointmentId, success } = req.body
 
-        if (success === "true") {
-            await appointmentModel.findByIdAndUpdate(appointmentId, { payment: true })
-            return res.json({ success: true, message: 'Payment Successful' })
-        }
+//         if (success === "true") {
+//             await appointmentModel.findByIdAndUpdate(appointmentId, { payment: true })
+//             return res.json({ success: true, message: 'Payment Successful' })
+//         }
 
-        res.json({ success: false, message: 'Payment Failed' })
+//         res.json({ success: false, message: 'Payment Failed' })
 
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
+//     } catch (error) {
+//         console.log(error)
+//         res.json({ success: false, message: error.message })
+//     }
 
-}
+// }
 
 export {
     loginUser,
@@ -353,6 +412,5 @@ export {
     cancelAppointment,
     paymentRazorpay,
     verifyRazorpay,
-    paymentStripe,
-    verifyStripe
+
 }

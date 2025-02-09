@@ -29,7 +29,9 @@
 // app.listen(port, () => console.log(Server started on PORT:${port}))
 
 import express from "express";
-import assert from "assert";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 import cors from "cors";
 import session from "express-session";
 import crypto from "crypto";
@@ -40,19 +42,20 @@ import connectCloudinary from "./config/cloudinary.js";
 import userRouter from "./routes/userRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 import adminRouter from "./routes/adminRoute.js";
+import multer from "multer";
+// import agoraRouter from "./routes/agora.js";
 
-// Use CommonJS require instead of import
-import fs from 'fs/promises';
+import fs from "fs";  
+import { promises as fsPromises } from "fs";  // ✅ Use fs.promises for async operations
 
-const credentials = JSON.parse(await fs.readFile(new URL('./creds.json', import.meta.url), 'utf-8'));
+const credentials = JSON.parse(
+  await fsPromises.readFile(new URL("./creds.json", import.meta.url), "utf-8")  // ✅ Now this will work!
+);
+
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-console.log(client_id); // Test if it works
-
-
-
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173","http://localhost:5174"];
+const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://192.168.52.64:5173","http://127.0.0.1:5000"];
 
 // App config
 const app = express();
@@ -100,7 +103,7 @@ const SCOPES = [
 app.use("/api/user", userRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/doctor", doctorRouter);
-
+// app.use("/api/agora", agoraRouter)
 app.get("/", (req, res) => {
   res.send("API Working");
 });
@@ -226,6 +229,55 @@ app.get("/fetch-heartrate", async (req, res) => {
   } catch (error) {
     console.error("Error fetching heart rate data:", error);
     res.status(500).json({ error: "Failed to fetch heart rate data" });
+  }
+});
+
+// Fix __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Ensure "uploads" folder exists
+const uploadFolder = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadFolder)) {  // ✅ Now existsSync will work!
+  fs.mkdirSync(uploadFolder, { recursive: true });
+}
+
+// Multer storage config
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  filename: (req, file, cb) => {
+    const userId = req.body.userId || "default_user";
+    cb(null, `prescription_${userId}.pdf`);
+  },
+});
+
+const upload = multer({ storage });
+
+
+
+
+app.use("/public", express.static("public"));
+
+// Upload Prescription API
+app.post("/upload-prescription", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  res.status(200).json({ message: "File uploaded successfully" });
+});
+
+// Serve Prescription API
+app.get("/pdf-view/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const filePath = path.join(__dirname, "uploads", `prescription_${userId}.pdf`);
+
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send("File not found");
   }
 });
 

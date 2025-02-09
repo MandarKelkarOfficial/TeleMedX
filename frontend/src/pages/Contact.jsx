@@ -130,7 +130,7 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="w-full py-3 px-6 bg-primary text-white rounded-lg hover:bg-primary-dark focus:outline-none"
+                className="w-full py-3 px-6 bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white rounded-lg hover:bg-gradient-to-r from-[#0D47A1] to-[#1976D2]-dark focus:outline-none"
               >
                 Submit
               </button>
