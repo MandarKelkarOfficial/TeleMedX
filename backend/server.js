@@ -258,69 +258,6 @@ const upload = multer({ storage });
 
 
 
-app.post("/generate-pdf", (req, res) => {
-  const {
-    patientName,
-    validityDate,
-    medicineDetails,
-    doctorAdvice,
-    nextVisit,
-  } = req.body;
-
-  const doc = new PDFDocument();
-  const filename = `${patientName}.pdf`;
-  const filePath = `./public/${filename}`;
-
-  doc.pipe(fs.createWriteStream(filePath));
-
-  // Header
-  doc.fontSize(16).text("Maddys Hospital", { align: "center" });
-  doc.fontSize(12).text("Dr. Maddy K", { align: "center" });
-  doc.text("Contact: +1234567890", { align: "center" });
-  doc.text("Email: Maddy@example.com", { align: "center" });
-  doc.text("Clinic Contact: +0987654321", { align: "center" });
-  doc.moveDown();
-
-  // Patient Info
-  doc.fontSize(14).text("Patient Information");
-  doc.fontSize(12).text(`Name: ${patientName || "N/A"}`);
-  doc.text(`Validity: ${validityDate || "N/A"}`);
-  doc.moveDown();
-
-  // Medicines
-  doc.fontSize(14).text("Medicines Prescribed");
-  if (medicineDetails.length > 0) {
-    medicineDetails.forEach((med, index) => {
-      doc.fontSize(12).text(
-        `${index + 1}. ${med.label} - Dose: ${med.dose || "N/A"}, 
-         Timing: ${med.timing || "N/A"}, Frequency: ${med.frequency || "N/A"}, 
-         Duration: ${med.duration || "N/A"}`
-      );
-    });
-  } else {
-    doc.text("No medicines prescribed.");
-  }
-  doc.moveDown();
-
-  // Advice
-  doc.fontSize(14).text("Doctor's Advice:");
-  doc.fontSize(12).text(doctorAdvice || "N/A");
-  doc.moveDown();
-
-  // Follow-Up
-  doc.fontSize(14).text("Follow-Up Details");
-  doc.fontSize(12).text(`Next Visit: ${nextVisit || "N/A"}`);
-  doc.moveDown();
-
-  // Footer
-  doc.fontSize(10).text("Powered by TelemedX", { align: "center" });
-
-  doc.end();
-
-  doc.on("end", () => {
-    res.json({ url: `http://localhost:4000/public/${filename}` });
-  });
-});
 
 app.use("/public", express.static("public"));
 

@@ -147,9 +147,6 @@
 
 // export default MedicineSearch;
 
-
-
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Medicine_Details from "../../Medicine_Details.json"; // Import the JSON file
@@ -158,9 +155,8 @@ const MedicineSearch = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [foundMedicines, setFoundMedicines] = useState([]);
   const [medicines, setMedicines] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [pdfFile, setPdfFile] = useState(null);
-  const [medicineNames, setMedicineNames] = useState(""); // New state to hold the comma-separated medicine names
+  const [summary, setSummary] = useState(""); // To store the summary returned by the backend
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -190,39 +186,34 @@ const MedicineSearch = () => {
     setFoundMedicines(results);
   };
 
-  const handlePdfUpload = async (e) => {
-    const file = e.target.files[0];
-    if (file && file.type === "application/pdf") {
-      setPdfFile(file);
+  const handlePdfUpload = async (event) => {
+    const file = event.target.files[0];
+  
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("file", file);
+  
+    try {
       setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        // Extract the medicine names array from the response and join into a single string.
-        const namesArray = response.data.medicine; // Assume this returns an array, e.g., ["Ibuprofen", "Amoxicillin"]
-        const namesString = namesArray.join(", ");
-        setMedicineNames(namesString);
-      } catch (error) {
-        console.error("Error uploading file:", error);
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      alert("Please upload a valid PDF file.");
+      // Do not set the 'Content-Type' header manually.
+      const response = await axios.post("http://127.0.0.1:5000/summarize", formData);
+      const { summary } = response.data;
+      setSummary(summary);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-5xl mx-auto my-10 p-5">
+    <div className="max-w-4xl mx-auto my-10 p-8 bg-white shadow-xl rounded-lg">
       {/* Medicine Search Section */}
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-8">
         <input
           type="text"
           placeholder="Enter medicine names separated by commas..."
@@ -282,20 +273,19 @@ const MedicineSearch = () => {
       )}
 
       {/* PDF Upload Section */}
-      <div className="mt-6">
+      <div className="mt-8 p-5 bg-gray-100 rounded-lg shadow-md">
+        <h3 className="text-xl font-semibold text-blue-700 mb-4">Upload PDF Prescription</h3>
         <input
           type="file"
           accept="application/pdf"
           onChange={handlePdfUpload}
-          className="px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        {loading && <p className="text-center mt-4">Uploading...</p>}
-        {medicineNames && (
+        {loading && <p className="text-center mt-4 text-blue-500">Uploading...</p>}
+        {summary && (
           <div className="mt-6">
-            <h3 className="text-xl font-semibold text-blue-700">
-              Extracted Medicine Names:
-            </h3>
-            <p className="bg-gray-100 p-4 rounded-lg">{medicineNames}</p>
+            <h4 className="text-xl font-semibold text-blue-700">Prescription Summary:</h4>
+            <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-gray-700">{summary}</pre>
           </div>
         )}
       </div>
