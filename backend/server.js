@@ -26,7 +26,7 @@
 //   res.send("API Working")
 // });
 
-// app.listen(port, () => console.log(`Server started on PORT:${port}`))
+// app.listen(port, () => console.log(Server started on PORT:${port}))
 
 import express from "express";
 import path from "path";
