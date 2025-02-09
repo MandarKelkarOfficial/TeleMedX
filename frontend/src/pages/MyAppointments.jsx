@@ -34,16 +34,16 @@ const MyAppointments = () => {
         //console.log(dateArray + "helloooo")
         return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2]
     }
-    const formatDate = (slotDate) => {
-        try {
-            const [day, month, year] = slotDate.split("_");
-            if (!day || !month || !year) throw new Error("Invalid date format");
-            return `${day} ${months[Number(month)]} ${year}`;
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "Invalid date";
-        }
-    };
+    // const formatDate = (slotDate) => {
+    //     try {
+    //         const [day, month, year] = slotDate.split("_");
+    //         if (!day || !month || !year) throw new Error("Invalid date format");
+    //         return `${day} ${months[Number(month)]} ${year}`;
+    //     } catch (error) {
+    //         console.error("Error formatting date:", error);
+    //         return "Invalid date";
+    //     }
+    // };
 
     const fetchAppointments = async () => {
         setLoading(true);
@@ -186,7 +186,7 @@ return (
                             <p>{item.docData.address.line2}</p>
                             <p>
                                 <span className="font-medium text-gray-700">Date & Time:</span>{" "}
-                                {formatDate(item.slotDate)} | {item.slotTime}
+                                {slotDateFormat(item.slotDate)} | {item.slotTime}
                             </p>
                         </div>
                         <div className="flex flex-col gap-2 w-full sm:w-auto text-center">
