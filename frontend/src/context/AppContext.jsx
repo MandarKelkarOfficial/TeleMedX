@@ -8,6 +8,8 @@ const AppContextProvider = (props) => {
 
     const currencySymbol = '₹'
     const backendUrl = import.meta.env.VITE_BACKEND_URL
+    console.log("Backend URL:", backendUrl);
+
 
     const [doctors, setDoctors] = useState([])
     const [token, setToken] = useState(localStorage.getItem('token') ? localStorage.getItem('token') : '')
@@ -21,6 +23,7 @@ const AppContextProvider = (props) => {
             const { data } = await axios.get(backendUrl + '/api/doctor/list')
             if (data.success) {
                 setDoctors(data.doctors)
+                console.log(data)
             } else {
                 toast.error(data.message)
             }
@@ -31,7 +34,26 @@ const AppContextProvider = (props) => {
         }
 
     }
-
+    // const getDoctorsData = async () => {
+    //     try {
+    //         console.log("Fetching doctors with docId:", docId);
+    //         const { data } = await axios.get(`${backendUrl}/api/doctors/${docId}`, {
+    //             headers: { token },
+    //         });
+    //         console.log("Doctors API response:", data);
+    
+    //         if (data.success) {
+    //             setDoctors(data.doctors);
+    //         } else {
+    //             console.error("Failed to fetch doctors:", data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching doctors:", error.response?.status, error.message);
+    //     }
+    // };
+    
+    
+    
     // Getting User Profile using API
     const loadUserProfileData = async () => {
 
