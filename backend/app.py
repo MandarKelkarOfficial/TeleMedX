@@ -71,7 +71,7 @@ csv_file_path = "./Medicine_Details.csv"
 data = pd.read_csv(csv_file_path)
 
 # Ensure necessary columns exist
-required_columns = ["Medicine Name", "Composition", "Excellent Review %", "Average Review %", "Poor Review %"]
+required_columns = ["Medicine Name", "Composition", "Excellent Review %", "Average Review %", "Poor Review %","Image URL"]
 if not all(col in data.columns for col in required_columns):
     raise ValueError("CSV file must contain these columns: " + ", ".join(required_columns))
 
@@ -102,56 +102,23 @@ def get_alternative_medicines(med_name, top_n=3):
     data["review_score"] = data["Excellent Review %"] + data["Average Review %"] - data["Poor Review %"]
     data["final_score"] = (0.7 * data["composition_match"]) + (0.3 * data["review_score"])
 
-    results = data[["Medicine Name", "composition_match", "final_score"]].copy()
+    results = data[["Medicine Name", "composition_match", "final_score","Image URL"]].copy()
     results = results[results["Medicine Name"] != med_name].sort_values(by=["final_score"], ascending=False)
+    # print(results.head(top_n).to_dict(orient="records"))
 
     return results.head(top_n).to_dict(orient="records")
 
-def extract_medicine_names_from_pdf(pdf_path):
-    """Extracts text from PDF and finds medicine names from dataset."""
-    medicine_names = set(data["Medicine Name"].str.lower())  # Lowercase for matching
-    extracted_medicines = set()
+@app.route('/get_alternatives', methods=['POST'])
+def get_alternatives():
+    medicine_name = request.data.decode("utf-8").strip()  # Read raw text from request
 
-    with open(pdf_path, "rb") as file:
-        reader = PyPDF2.PdfReader(file)
-        for page in reader.pages:
-            text = page.extract_text()
-            if text:
-                words = text.lower().split()
-                extracted_medicines.update(medicine_names.intersection(words))
+    if not medicine_name:
+        return jsonify({"error": "No medicine name provided"}), 400
 
-    return list(extracted_medicines)
+    alternatives = get_alternative_medicines(medicine_name)
+    
+    return jsonify({medicine_name: alternatives})
 
-@app.route("/upload_pdf", methods=["POST"])
-def upload_pdf():
-    if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    pdf_file = request.files["file"]
-
-    if pdf_file.filename == "":
-        return jsonify({"error": "No selected file"}), 400
-
-    if not pdf_file.filename.lower().endswith(".pdf"):
-        return jsonify({"error": "Only PDF files are allowed"}), 400
-
-    # Save the uploaded file temporarily
-    temp_path = "temp_uploaded.pdf"
-    pdf_file.save(temp_path)
-
-    try:
-        # Extract medicine names from PDF
-        extracted_medicines = extract_medicine_names_from_pdf(temp_path)
-
-        # Get alternatives for each extracted medicine
-        alternatives = {med: get_alternative_medicines(med) for med in extracted_medicines}
-
-        return jsonify(alternatives)
-
-    finally:
-        # Remove temp file
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
 
 
 

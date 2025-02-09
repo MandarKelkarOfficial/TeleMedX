@@ -27,6 +27,7 @@ const Navbar = () => {
         <NavLink to="/doctors" className="nav-link">All Doctors</NavLink>
         <NavLink to="/my-health" className="nav-link">Health</NavLink>
         <NavLink to="/my-health-search" className="nav-link">MediView</NavLink>
+        <NavLink to="/my-health-alternative" className="nav-link">Alternate</NavLink>
         <NavLink to="/about" className="nav-link">About</NavLink>
         <NavLink to="/contact" className="nav-link">Contact</NavLink>
       </ul>
@@ -84,6 +85,7 @@ const Navbar = () => {
           <NavLink to="/doctors" className="nav-link" onClick={() => setShowMenu(false)}>All Doctors</NavLink>
           <NavLink to="/my-health" className="nav-link" onClick={() => setShowMenu(false)}>Health</NavLink>
           <NavLink to="/my-health-search" className="nav-link" onClick={() => setShowMenu(false)}>MediView</NavLink>
+          <NavLink to="/my-health-alternative" className="nav-link" onClick={() => setShowMenu(false)}>Alternate</NavLink>
           <NavLink to="/about" className="nav-link" onClick={() => setShowMenu(false)}>About</NavLink>
           <NavLink to="/contact" className="nav-link" onClick={() => setShowMenu(false)}>Contact</NavLink>
         </ul>
