@@ -16,6 +16,7 @@ import Verify from './pages/Verify'
 // import HeartRate from './pages/Health'
 import Health from './pages/Health'
 import MedicineSearch from './pages/MedicalSearch'
+import MedicineAlt from './pages/MedicalAlternative'
 //import VideoCall from './components/VideoCall'
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
         <Route path='/verify' element={<Verify />} />
         <Route path='/my-health' element={<Health/>} />
         <Route path='/my-health-search' element={<MedicineSearch/>} />
+        <Route path='/my-health-alternative' element={<MedicineAlt/>} />
         {/* <Route path="/video-call/:docId" element={<VideoCall />} /> */}
       </Routes>
       <Footer />
