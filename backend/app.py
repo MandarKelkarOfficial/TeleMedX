@@ -1,7 +1,10 @@
 from flask import Flask, request, jsonify
 import pdfplumber
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 
 def extract_prescription_data(pdf_path):
     """Extracts medicine details from the given PDF file."""
@@ -58,6 +61,7 @@ def extract_prescription_data(pdf_path):
                         data_dict["timing"].append(words[2])
                         data_dict["frequency"].append(words[3])
                         data_dict["duration"].append(words[4])
+                        print(data_dict)
 
     return data_dict
 
@@ -81,6 +85,8 @@ def upload_file():
 
     # Extract prescription data
     extracted_data = extract_prescription_data(pdf_path)
+    print(extracted_data)  # Log the extracted text to debug
+
 
     return jsonify(extracted_data)
 

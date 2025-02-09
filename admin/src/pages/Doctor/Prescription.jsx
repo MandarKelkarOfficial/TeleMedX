@@ -77,7 +77,7 @@ const PrescriptionGenerator = () => {
   const generatePDF = () => {
     const doc = new jsPDF();
     const patientPhone = "+1234567890";
-    const patientID = "P12345";
+    const patientID = "123";
     const visitDate = new Date().toLocaleDateString();
     const visitNumber = 5;
     const doctorAdvice = "Follow a healthy diet and stay hydrated.";
