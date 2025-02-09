@@ -1,3 +1,4 @@
+
 // import { useState, useEffect } from "react";
 // import axios from "axios";
 // import Medicine_Details from "../../Medicine_Details.json"; // Import the JSON file
@@ -7,7 +8,7 @@
 //   const [foundMedicines, setFoundMedicines] = useState([]);
 //   const [medicines, setMedicines] = useState([]);
 //   const [pdfFile, setPdfFile] = useState(null);
-//   const [extractedData, setExtractedData] = useState(null);
+//   const [summary, setSummary] = useState(""); // To store the summary returned by the backend
 //   const [loading, setLoading] = useState(false);
 
 //   useEffect(() => {
@@ -28,7 +29,6 @@
 //     }
 
 //     const searchTerms = term.split(",").map((t) => t.trim());
-
 //     const results = medicines.filter((med) =>
 //       searchTerms.some((term) =>
 //         med["Medicine Name"].toLowerCase().includes(term)
@@ -38,35 +38,34 @@
 //     setFoundMedicines(results);
 //   };
 
-//   const handlePdfUpload = async (e) => {
-//     const file = e.target.files[0];
-//     if (file && file.type === "application/pdf") {
-//       setPdfFile(file);
+//   const handlePdfUpload = async (event) => {
+//     const file = event.target.files[0];
+  
+//     if (!file) {
+//       console.error("No file selected");
+//       return;
+//     }
+  
+//     const formData = new FormData();
+//     formData.append("file", file);
+  
+//     try {
 //       setLoading(true);
-//       const formData = new FormData();
-//       formData.append("file", file);
-
-//       try {
-//         const response = await axios.post("http://127.0.0.1:5000/upload", formData, {
-//           headers: {
-//             "Content-Type": "multipart/form-data",
-//           },
-//         });
-//         setExtractedData(response.data);
-//       } catch (error) {
-//         console.error("Error uploading file:", error);
-//       } finally {
-//         setLoading(false);
-//       }
-//     } else {
-//       alert("Please upload a valid PDF file.");
+//       // Do not set the 'Content-Type' header manually.
+//       const response = await axios.post("http://127.0.0.1:5000/summarize", formData);
+//       const { summary } = response.data;
+//       setSummary(summary);
+//     } catch (error) {
+//       console.error("Error uploading file:", error);
+//     } finally {
+//       setLoading(false);
 //     }
 //   };
 
 //   return (
-//     <div className="max-w-5xl mx-auto my-10 p-5">
+//     <div className="max-w-4xl mx-auto my-10 p-8 bg-white shadow-xl rounded-lg">
 //       {/* Medicine Search Section */}
-//       <div className="flex justify-center">
+//       <div className="flex justify-center mb-8">
 //         <input
 //           type="text"
 //           placeholder="Enter medicine names separated by commas..."
@@ -126,18 +125,19 @@
 //       )}
 
 //       {/* PDF Upload Section */}
-//       <div className="mt-6">
+//       <div className="mt-8 p-5 bg-gray-100 rounded-lg shadow-md">
+//         <h3 className="text-xl font-semibold text-blue-700 mb-4">Upload PDF Prescription</h3>
 //         <input
 //           type="file"
 //           accept="application/pdf"
 //           onChange={handlePdfUpload}
-//           className="px-4 py-2 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//           className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 //         />
-//         {loading && <p className="text-center mt-4">Uploading...</p>}
-//         {extractedData && (
+//         {loading && <p className="text-center mt-4 text-blue-500">Uploading...</p>}
+//         {summary && (
 //           <div className="mt-6">
-//             <h3 className="text-xl font-semibold text-blue-700">Extracted Data:</h3>
-//             <pre className="bg-gray-100 p-4 rounded-lg">{JSON.stringify(extractedData, null, 2)}</pre>
+//             <h4 className="text-xl font-semibold text-blue-700">Prescription Summary:</h4>
+//             <pre className="bg-gray-100 p-4 rounded-lg whitespace-pre-wrap text-gray-700">{summary}</pre>
 //           </div>
 //         )}
 //       </div>
@@ -146,6 +146,7 @@
 // };
 
 // export default MedicineSearch;
+
 
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -186,20 +187,22 @@ const MedicineSearch = () => {
     setFoundMedicines(results);
   };
 
-  const handlePdfUpload = async (event) => {
+  const handlePdfUpload = (event) => {
     const file = event.target.files[0];
-  
-    if (!file) {
+    setPdfFile(file);
+  };
+
+  const handleSubmit = async () => {
+    if (!pdfFile) {
       console.error("No file selected");
       return;
     }
-  
+
     const formData = new FormData();
-    formData.append("file", file);
-  
+    formData.append("file", pdfFile);
+
     try {
       setLoading(true);
-      // Do not set the 'Content-Type' header manually.
       const response = await axios.post("http://127.0.0.1:5000/summarize", formData);
       const { summary } = response.data;
       setSummary(summary);
@@ -223,6 +226,7 @@ const MedicineSearch = () => {
         />
       </div>
 
+      {/* Dynamically display search results */}
       {foundMedicines.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-6">
           {foundMedicines.map((medicine, index) => (
@@ -236,7 +240,7 @@ const MedicineSearch = () => {
                 className="w-full h-40 object-cover rounded-t-lg"
                 onError={(e) => {
                   e.target.onerror = null;
-                  e.target.src = "fallback-image-url.jpg";
+                  e.target.src = "fallback-image-url.jpg"; // Fallback image in case the medicine image fails to load
                 }}
               />
               <div className="p-4">
@@ -281,6 +285,12 @@ const MedicineSearch = () => {
           onChange={handlePdfUpload}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+        <button
+          onClick={handleSubmit}
+          className="w-full mt-4 px-4 py-3 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          Upload & Get Summary
+        </button>
         {loading && <p className="text-center mt-4 text-blue-500">Uploading...</p>}
         {summary && (
           <div className="mt-6">
