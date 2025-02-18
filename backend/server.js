@@ -56,14 +56,7 @@ app.use(express.json());
 // );
 
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      callback(null, true); 
-    },
-    credentials: true,
-  })
-);
+app.use(cors());
 
 
 
