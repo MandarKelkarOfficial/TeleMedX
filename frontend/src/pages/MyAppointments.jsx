@@ -34,16 +34,16 @@ const MyAppointments = () => {
         //console.log(dateArray + "helloooo")
         return dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2]
     }
-    const formatDate = (slotDate) => {
-        try {
-            const [day, month, year] = slotDate.split("_");
-            if (!day || !month || !year) throw new Error("Invalid date format");
-            return `${day} ${months[Number(month)]} ${year}`;
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "Invalid date";
-        }
-    };
+    // const formatDate = (slotDate) => {
+    //     try {
+    //         const [day, month, year] = slotDate.split("_");
+    //         if (!day || !month || !year) throw new Error("Invalid date format");
+    //         return `${day} ${months[Number(month)]} ${year}`;
+    //     } catch (error) {
+    //         console.error("Error formatting date:", error);
+    //         return "Invalid date";
+    //     }
+    // };
 
     const fetchAppointments = async () => {
         setLoading(true);
@@ -82,34 +82,101 @@ const MyAppointments = () => {
         }
     };
 
-    const initPayment = (order) => {
-        const options = {
-            key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-            amount: order.amount,
-            currency: order.currency,
-            name: "TeleMedX - Appointment Payment",
-            description: "Secure online payment",
-            order_id: order.id,
-            handler: async (response) => {
-                try {
-                    const { data } = await axios.post(
-                        `${backendUrl}/api/user/verifyRazorpay`,
-                        response,
-                        { headers: { token } }
-                    );
-                    if (data.success) {
-                        navigate("/my-appointments");
-                        fetchAppointments();
-                    }
-                } catch (error) {
-                    console.log(error);
-                    toast.error("Payment verification failed.");
-                }
-            },
-        };
-        const rzp = new window.Razorpay(options);
-        rzp.open();
+//     const initPayment = (order) => {
+//         const options = {
+//             key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+//             amount: order.amount,
+//             currency: order.currency,
+//             name: "TeleMedX - Appointment Payment",
+//             description: "Secure online payment",
+//             order_id: order.id,
+//             handler: async (response) => {
+//                 try {
+//                     const { data } = await axios.post(
+//                         `${backendUrl}/api/user/verifyRazorpay`,
+//                         response,
+//                         { headers: { token } }
+//                     );
+//                     if (data.success) {
+//                         navigate("/my-appointments");
+//                         fetchAppointments();
+//                     }
+//                 } catch (error) {
+//                     console.log(error);
+//                     toast.error("Payment verification failed.");
+//                 }
+//             },
+//         };
+//         const rzp = new window.Razorpay(options);
+//         rzp.open();
+//     };
+
+//   const payWithRazorpay = async (appointmentId) => {
+//     try {
+//       const { data } = await axios.post(
+//         `${backendUrl}/api/user/payment-razorpay`,
+//         { appointmentId },
+//         { headers: { token } }
+//       );
+//       if (data.success) {
+//         initPayment(data.order);
+//       } else {
+//         toast.error(data.message || "Razorpay payment failed.");
+//       }
+//     } catch (error) {
+//       console.log(error);
+//       toast.error(error.response?.data?.message || "Razorpay payment failed.");
+//     }
+// };
+
+//   const payWithStripe = async (appointmentId) => {
+//     try {
+//       const { data } = await axios.post(
+//         `${backendUrl}/api/user/payment-stripe`,
+//         { appointmentId },
+//         { headers: { token } }
+//       );
+//       data.success
+//         ? (window.location.href = data.session_url)
+//         : toast.error(data.message);
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Stripe payment failed.");
+// }
+//   };
+
+// useEffect(() => {
+//     if (token) fetchAppointments();
+// }, [token]);
+
+const initPayment = (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "TeleMedX - Appointment Payment",
+      description: "Secure online payment",
+      order_id: order.id,
+      handler: async (response) => {
+        try {
+          const { data } = await axios.post(
+            `${backendUrl}/api/user/verifyRazorpay`,
+            response,
+            { headers: { token } }
+          );
+          if (data.success) {
+            navigate("/my-appointments");
+            fetchAppointments();
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("Payment verification failed.");
+        }
+      },
     };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
 
   const payWithRazorpay = async (appointmentId) => {
     try {
@@ -127,27 +194,27 @@ const MyAppointments = () => {
       console.log(error);
       toast.error(error.response?.data?.message || "Razorpay payment failed.");
     }
-};
-
-  const payWithStripe = async (appointmentId) => {
-    try {
-      const { data } = await axios.post(
-        `${backendUrl}/api/user/payment-stripe`,
-        { appointmentId },
-        { headers: { token } }
-      );
-      data.success
-        ? (window.location.href = data.session_url)
-        : toast.error(data.message);
-    } catch (error) {
-      console.log(error);
-      toast.error("Stripe payment failed.");
-}
   };
 
-useEffect(() => {
+//   const payWithStripe = async (appointmentId) => {
+//     try {
+//       const { data } = await axios.post(
+//         ${backendUrl}/api/user/payment-stripe,
+//         { appointmentId },
+//         { headers: { token } }
+//       );
+//       data.success
+//         ? (window.location.href = data.session_url)
+//         : toast.error(data.message);
+//     } catch (error) {
+//       console.log(error);
+//       toast.error("Stripe payment failed.");
+//     }
+//   };
+
+  useEffect(() => {
     if (token) fetchAppointments();
-}, [token]);
+  }, [token]);
 
 return (
     <div>
@@ -186,7 +253,7 @@ return (
                             <p>{item.docData.address.line2}</p>
                             <p>
                                 <span className="font-medium text-gray-700">Date & Time:</span>{" "}
-                                {formatDate(item.slotDate)} | {item.slotTime}
+                                {slotDateFormat(item.slotDate)} | {item.slotTime}
                             </p>
                         </div>
                         <div className="flex flex-col gap-2 w-full sm:w-auto text-center">
@@ -200,12 +267,12 @@ return (
                             )}
                             {!item.cancelled && !item.payment && !item.isCompleted && payment === item._id && (
                                 <div className="flex flex-col gap-2">
-                                    <button
+                                    {/* <button
                                         onClick={() => payWithStripe(item._id)}
                                         className="w-full sm:w-48 py-2 border rounded flex items-center justify-center hover:bg-gray-100"
                                     >
                                         <img className="max-w-20 max-h-5" src={assets.stripe_logo} alt="Stripe" />
-                                    </button>
+                                    </button> */}
                                     <button
                                         onClick={() => payWithRazorpay(item._id)}
                                         className="w-full sm:w-48 py-2 border rounded flex items-center justify-center hover:bg-gray-100"

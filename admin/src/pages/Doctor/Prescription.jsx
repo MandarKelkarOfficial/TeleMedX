@@ -13,7 +13,7 @@ import medicinesList from "./MedicineList";
 
 // import logo from "../../assets/assets";
 
-// Medicine list with only the basic parameters.
+// Medicine list with only the basic parameters.   
 const MedicinesList = medicinesList;
 
 const timingOptions = [

@@ -323,7 +323,7 @@ const AvailableSlots = ({ docInfo, token, backendUrl, getDoctorsData }) => {
                                 <div
                                     key={index}
                                     onClick={() => setSlotIndex(index)}
-                                    className={`text-center py-6 min-w-16 rounded-full cursor-pointer ${slotIndex === index
+                                    className={`text-center py-6 min-w-16 rounded-full hover:scale-105 transition-all cursor-pointer ${slotIndex === index
                                             ? "bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white"
                                             : "border border-[#DDDDDD]"
                                         }`}
@@ -347,7 +347,7 @@ const AvailableSlots = ({ docInfo, token, backendUrl, getDoctorsData }) => {
                                     <p
                                         key={index}
                                         onClick={() => isSlotAvailable && setSlotTime(item.time)}
-                                        className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full cursor-pointer ${item.time === slotTime
+                                        className={`text-sm font-light flex-shrink-0 px-5 py-2 rounded-full hover:scale-105 transition-all cursor-pointer ${item.time === slotTime
                                                 ? "bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white"
                                                 : isSlotAvailable
                                                     ? "text-[#949494] border border-[#B4B4B4]"
@@ -366,7 +366,7 @@ const AvailableSlots = ({ docInfo, token, backendUrl, getDoctorsData }) => {
                 <div className="w-full md:w-auto md:ml-auto flex items-center mt-4 md:mt-0">
                     <button
                         onClick={bookAppointment}
-                        className="w-full md:w-auto bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white px-6 py-4 rounded-full shadow-lg"
+                        className="w-full md:w-auto bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white px-6 py-4 rounded-full hover:scale-105 transition-all shadow-lg"
                     >
                         Book an appointment
                     </button>

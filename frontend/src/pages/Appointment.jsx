@@ -23,7 +23,7 @@ const Appointment = () => {
             {/* Doctor Details - Minimized if slots are shown */}
             <div className={`flex ${showSlots ? 'items-center gap-4' : 'flex-col sm:flex-row gap-4'}`}>
                 {!showSlots && (
-                    <img className='bg-primary w-24 h-24 sm:w-72 sm:h-auto rounded-lg' src={docInfo.image} alt="Doctor" />
+                    <img className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2] w-24 h-24 sm:w-72 sm:h-auto rounded-lg' src={docInfo.image} alt="Doctor" />
                 )}
                 
                 {!showSlots && (
@@ -48,7 +48,7 @@ const Appointment = () => {
                 <div className='flex justify-center mt-6'>
                     <button 
                         onClick={() => setShowSlots(true)}
-                        className='bg-primary text-white text-sm font-light px-6 py-3 rounded-full'>
+                        className='bg-gradient-to-r from-[#0D47A1] to-[#1976D2] text-white text-sm font-light px-6 py-3 rounded-full hover:scale-110 transition-all'>
                         Check Available Slots
                     </button>
                 </div>
