@@ -1,33 +1,3 @@
-// import express from "express"
-// import cors from 'cors'
-// import 'dotenv/config'
-// import connectDB from "./config/mongodb.js"
-// import connectCloudinary from "./config/cloudinary.js"
-// import userRouter from "./routes/userRoute.js"
-// import doctorRouter from "./routes/doctorRoute.js"
-// import adminRouter from "./routes/adminRoute.js"
-
-// // app config
-// const app = express()
-// const port = process.env.PORT || 4000
-// connectDB()
-// connectCloudinary()
-
-// // middlewares
-// app.use(express.json())
-// app.use(cors())
-
-// // api endpoints
-// app.use("/api/user", userRouter)
-// app.use("/api/admin", adminRouter)
-// app.use("/api/doctor", doctorRouter)
-
-// app.get("/", (req, res) => {
-//   res.send("API Working")
-// });
-
-// app.listen(port, () => console.log(Server started on PORT:${port}))
-
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -45,17 +15,25 @@ import adminRouter from "./routes/adminRoute.js";
 import multer from "multer";
 // import agoraRouter from "./routes/agora.js";
 
-import fs from "fs";  
-import { promises as fsPromises } from "fs";  // ✅ Use fs.promises for async operations
+import fs from "fs";
+import { promises as fsPromises } from "fs"; // ✅ Use fs.promises for async operations
 
 const credentials = JSON.parse(
-  await fsPromises.readFile(new URL("./creds.json", import.meta.url), "utf-8")  // ✅ Now this will work!
+  await fsPromises.readFile(new URL("./creds.json", import.meta.url), "utf-8") // ✅ Now this will work!
 );
-
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-const allowedOrigins = ["http://localhost:3000", "http://localhost:5173", "http://localhost:5174", "http://192.168.52.64:5173","http://127.0.0.1:5000"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://192.168.52.64:5173",
+  "http://127.0.0.1:5000",
+  "https://backend-21a3.onrender.com",
+  "https://telemedx.netlify.app",
+  "https://telemedx.onrender.com",
+];
 
 // App config
 const app = express();
@@ -138,7 +116,8 @@ app.get("/auth/google/callback", async (req, res) => {
       profilePhotoUrl: profile.data.photos[0].url,
     };
 
-    res.redirect("http://localhost:5173/my-health"); // Redirect to React app
+    // res.redirect("http://localhost:5173/my-health"); // Redirect to React app
+    res.redirect("https://telemedx.netlify.app/my-health"); // Redirect to React app
   } catch (error) {
     console.error("Error retrieving access token:", error);
     res.redirect("/error");
@@ -239,7 +218,8 @@ const __dirname = dirname(__filename);
 // Ensure "uploads" folder exists
 const uploadFolder = path.join(__dirname, "uploads");
 
-if (!fs.existsSync(uploadFolder)) {  // ✅ Now existsSync will work!
+if (!fs.existsSync(uploadFolder)) {
+  // ✅ Now existsSync will work!
   fs.mkdirSync(uploadFolder, { recursive: true });
 }
 
@@ -256,9 +236,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-
-
-
 app.use("/public", express.static("public"));
 
 // Upload Prescription API
@@ -272,7 +249,11 @@ app.post("/upload-prescription", upload.single("file"), (req, res) => {
 // Serve Prescription API
 app.get("/pdf-view/:userId", (req, res) => {
   const userId = req.params.userId;
-  const filePath = path.join(__dirname, "uploads", `prescription_${userId}.pdf`);
+  const filePath = path.join(
+    __dirname,
+    "uploads",
+    `prescription_${userId}.pdf`
+  );
 
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
