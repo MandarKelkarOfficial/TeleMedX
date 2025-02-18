@@ -56,9 +56,12 @@ app.use(express.json());
 // );
 
 
-app.use(cors());
-
-
+app.use(
+  cors({
+    origin: "https://telemedx.netlify.app", // Your frontend URL
+    credentials: true, // If using authentication (cookies, sessions)
+  })
+);
 
 
 app.use(

@@ -10,6 +10,7 @@
       "http://localhost:3000",
       "http://localhost:3000/patient",
       "https://telemedx.onrender.com/auth/google/callback",
+      "https://telemedx.onrender.com/",
       "http://localhost:5173/my-health"
     ],
     "javascript_origins": [
