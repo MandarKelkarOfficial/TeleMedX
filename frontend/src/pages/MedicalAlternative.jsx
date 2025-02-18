@@ -197,7 +197,7 @@ const MedicineAlt = () => {
       setError("");
 
       const response = await axios.post(
-        "http://localhost:5000/get_alternatives",
+        "https://backend-21a3.onrender.com/get_alternatives",
         medicineName.trim(), // Sending plain text
         { headers: { "Content-Type": "text/plain" } } // Setting header for plain text
       );
