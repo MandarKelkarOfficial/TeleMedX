@@ -24,16 +24,16 @@ const credentials = JSON.parse(
 
 const { client_secret, client_id, redirect_uris } = credentials.web;
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://192.168.52.64:5173",
-  "http://127.0.0.1:5000",
-  "https://backend-21a3.onrender.com",
-  "https://telemedx.netlify.app",
-  "https://telemedx.onrender.com",
-];
+// const allowedOrigins = [
+//   "http://localhost:3000",
+//   "http://localhost:5173",
+//   "http://localhost:5174",
+//   "http://192.168.52.64:5173",
+//   "http://127.0.0.1:5000",
+//   "https://backend-21a3.onrender.com",
+//   "https://telemedx.netlify.app",
+//   "https://telemedx.onrender.com",
+// ];
 
 // App config
 const app = express();
@@ -43,18 +43,31 @@ connectCloudinary();
 
 // Middleware
 app.use(express.json());
+// app.use(
+//   cors({
+//     origin: function (origin, callback) {
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         callback(null, true);
+//       } else {
+//         callback(new Error("Not allowed by CORS"));
+//       }
+//     },
+//     credentials: true,
+//   })
+// );
+
+
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: "*", 
+    credentials: true, 
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
   })
 );
+
+
+
 app.use(
   session({
     secret: crypto.randomBytes(32).toString("hex"),
