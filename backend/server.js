@@ -37,34 +37,34 @@ const { client_secret, client_id, redirect_uris } = credentials.web;
 
 // App config
 const app = express();
+
 const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
 // Middleware
 app.use(express.json());
+
+
 // app.use(
 //   cors({
-//     origin: function (origin, callback) {
-//       if (!origin || allowedOrigins.includes(origin)) {
-//         callback(null, true);
-//       } else {
-//         callback(new Error("Not allowed by CORS"));
-//       }
-//     },
-//     credentials: true,
+//     origin: "*", 
+//     credentials: true, 
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
 //   })
 // );
 
 
 app.use(
   cors({
-    origin: "*", 
-    credentials: true, 
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
+    origin: (origin, callback) => {
+      callback(null, true); 
+    },
+    credentials: true,
   })
 );
+
 
 
 
