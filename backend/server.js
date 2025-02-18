@@ -46,14 +46,6 @@ connectCloudinary();
 app.use(express.json());
 
 
-// app.use(
-//   cors({
-//     origin: "*", 
-//     credentials: true, 
-//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//     allowedHeaders: "Origin,X-Requested-With,Content-Type,Accept,Authorization",
-//   })
-// );
 
 
 app.use(
@@ -62,6 +54,14 @@ app.use(
     credentials: true, // If using authentication (cookies, sessions)
   })
 );
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "https://telemedx.netlify.app");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 
 app.use(
