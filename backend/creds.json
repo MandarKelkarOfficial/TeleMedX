@@ -9,9 +9,11 @@
     "redirect_uris": [
       "http://localhost:3000",
       "http://localhost:3000/patient",
-      "https://telemedx.onrender.com/auth/google/callback",
-      "https://telemedx.onrender.com/",
-      "http://localhost:5173/my-health"
+      "http://localhost:4000/auth/google/callback",
+      "http://localhost:5173/my-health",
+      "https://telemedx.netlify.app/my-health",
+      "https://telemedx.onrender.com",
+      "https://telemedx.onrender.com/auth/google/callback"
     ],
     "javascript_origins": [
       "http://localhost:3000",

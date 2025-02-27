@@ -73,7 +73,7 @@ app.use(
 const oAuth2Client = new google.auth.OAuth2(
   client_id,
   client_secret,
-  redirect_uris[2]
+  redirect_uris[6]
 );
 
 // Google Fit API Scopes
