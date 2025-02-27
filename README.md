@@ -71,8 +71,9 @@ TelemedeX is an AI-driven telemedicine appointment scheduling system designed to
 ---
 
 ## 🤝 Contributors
-- **Ashwin Ketkar**
+
 - **Mandar Kelkar**
+- **Ashwin Ketkar**
 - **Anushree Kamath**
 - **Ved Deshpande**
 - **Mugdha Dharmadhikari**
